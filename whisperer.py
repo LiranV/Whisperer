@@ -23,6 +23,7 @@ class Whisperer(object):
         self._download_queue = set()
         self._last_issue_id_cache = None
         self._overwrite_without_confirmation = options.overwrite
+        self._skip_existing_issues = options.skip
         self.set_download_path(options.directory)
 
     def _generate_issue_url(self, issue_id):
@@ -68,6 +69,9 @@ class Whisperer(object):
         out_path = os.path.realpath(self._download_path + "/" + filename)
         # Check if file already exists
         if (not self._overwrite_without_confirmation) and os.path.isfile(out_path):
+            if self._skip_existing_issues:
+                print("Skipping issue #" + str(issue_id))
+                return
             print("File \"" + filename + "\" already exists!")
             overwrite = input("Would you like to overwrite this file? [Y/n] ").lower()
             if overwrite != 'y':
@@ -156,6 +160,8 @@ if __name__ == "__main__":
                         "[Default: current working directory]", type=str, default="./")
     parser.add_argument("-o", "--overwrite", help="Overwrite existing files " +
                         "without confirmation", action="store_true")
+    parser.add_argument("-s", "--skip", help="Skip issues that already exist ",
+                        action="store_true")
     parser.add_argument("-r", "--range", help="Comma separated list of the following: Issue ID, " +
                         "Range of ID's (Example: 13-last), 'last' (Latest issue), 'all' " +
                         "(From 1 to 'last) [Default: 'last']", type=str,
