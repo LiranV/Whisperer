@@ -34,7 +34,7 @@ class Whisperer(object):
     def _get_last_issue_id(self):
         """Get the last issue ID"""
         if self._last_issue_id_cache is not None:
-            return _last_issue_id_cache
+            return self._last_issue_id_cache
         print("Fetching latest issue ID...")
         data = str(self._fetch_url_content("http://digitalwhisper.co.il")[0])
         match = re.search("http://www.digitalwhisper.co.il/issue([0-9]+)", data)
@@ -55,8 +55,9 @@ class Whisperer(object):
         except urllib.error.URLError as e:
             print("URL Error: " + e.reason, file=sys.stderr)
             raise e
-        except:
-            print("Error: " + sys.exc_info()[0], file=sys.stderr)
+        except Exception as e:
+            print("Error: " + str(sys.exc_info()[0]), file=sys.stderr)
+            raise e
 
     def _bytes_to_megabytes(self, size):
         """Convert Bytes to Megabytes"""
@@ -169,4 +170,3 @@ if __name__ == "__main__":
     options = parser.parse_args()
 
     main(options)
-
