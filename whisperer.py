@@ -36,8 +36,8 @@ class Whisperer(object):
         if self._last_issue_id_cache is not None:
             return self._last_issue_id_cache
         print("Fetching latest issue ID...")
-        data = str(self._fetch_url_content("http://digitalwhisper.co.il")[0])
-        match = re.search("http://www.digitalwhisper.co.il/issue([0-9]+)", data)
+        data = str(self._fetch_url_content("https://digitalwhisper.co.il/issues")[0])
+        match = re.search("www.digitalwhisper.co.il/issue([0-9]+)", data)
         if match:
             self._last_issue_id_cache = int(match.group(1))
         else:
